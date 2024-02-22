@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+<h1> Items list</h1>
+<table>
+    <thead>
+    <tr>
+        <th>id</th>
+        <th>name</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% items.forEach( function (item){ %>
+
+        <tr>
+            <td> <%= item.id %> </td>
+            <td> <%= item.nom %></td>
+            <td> <a href="#" data-item-id="<%= item.id%>" class="action_delete">delete</a></td>
+
+        </tr>
+    <% } ) %>
+
+    </tbody>
+</table>
+
+<script>
+    async function delete_item(evt){
+        evt.preventDefault() // no te vayas por ahí
+        let id = $(this).data('item-id')
+        console.log('id',id)
+        try {
+
+            await $.ajax({
+                url: '/api/items/'  + id,
+                type: 'DELETE'
+            })
+            window.location.reload()
+
+        }catch (e) {
+            console.log(e)
+            console.log('Error' + e.status + " " + e.statusText)
+        }
+    }
+
+    $(document).ready(() =>{
+        document.getElementsByClassName('action_delete')
+        $('.action_delete').click(delete_item)
+    });
+</script>
+
+</body>
+</html>
